@@ -38,17 +38,23 @@ def getReqs(filename, salida):
     #Imports necesarios
     with open(filename) as f:
         for line in f.readlines():
-            if 'import' in line:
-                if ',' in line:
-                    words = line.split()
-                    words = [s.replace(',', '') for s in words]
-                    toImport.extend(words[words.index('import'):])
-                else:
-                    words = line.split()
-                    toImport.append(words[words.index('import') + 1])
+            if '\n' == line:
+                break
+            else:
+                if 'import' in line.split()[0]:
+                    if ',' in line:
+                        words = line.split()
+                        words = [s.replace(',', '') for s in words]
+                        words =  words[words.index('import')+1:len(words)]
+                        [toImport.append(s) for s in words]
+                    else:
+                        words = line.split()
+                        toImport.append(words[words.index('import') + 1])
+                elif 'from' in line.split()[0]:
+                    toImport.append(line.split()[1])
 
     
-    #print toImport
+    print toImport
     fileSalida = open(salida,"w") 
     x = freeze.freeze()
     for p in x:
